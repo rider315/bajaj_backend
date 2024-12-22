@@ -1,23 +1,25 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables from .env
 
 const app = express();
-const port = 5001;
+const port = process.env.PORT || 5001; // Use PORT from .env or default to 5001
 
 // Middleware for CORS
+// Allow the frontend origin
+const allowedOrigins = ['https://gauravchaudhary.online', 'http://localhost:5001', 'http://localhost:5173'];
 app.use(cors({
-  origin: ['https://gauravchaudhary.online', 'http://localhost:5001', 'http://localhost:5173'],  // Allow multiple origins
+  origin: allowedOrigins,
   methods: 'GET, POST, OPTIONS',
   allowedHeaders: 'Content-Type',
-  credentials: true,  // Allow credentials if necessary (set to true if using cookies, etc.)
+  credentials: true,
 }));
 
-
-app.options('*', cors());  // Handle preflight requests for all routes
-
+app.options('*', cors()); // Handle preflight requests for all routes
 app.use(bodyParser.json());
-
 
 // Route
 app.post('/bfhl', (req, res) => {
@@ -46,5 +48,5 @@ app.post('/bfhl', (req, res) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
